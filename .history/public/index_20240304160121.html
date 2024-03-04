@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Chat</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="chat">
+    <ul id="messages"></ul>
+    <input id="m" autocomplete="off" oninput="handleTyping()" />
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="requestChatHistory()">Get Chat History</button>
+  </div>
+
+  <div id="user-list">
+    <h3>Online Users</h3>
+    <ul id="online-users"></ul>
+  </div>
+
+  <div id="typing-indicator"></div>
+
+  <div id="edit-message-container" style="display: none;">
+    <input id="edit-message-input" autocomplete="off" />
+    <button onclick="confirmEdit()">Confirm Edit</button>
+    <button onclick="cancelEdit()">Cancel Edit</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

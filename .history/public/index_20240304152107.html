@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Chat</title>
+</head>
+<body>
+  <div id="chat">
+    <ul id="messages"></ul>
+    <input id="m" autocomplete="off" /><button onclick="sendMessage()">Send</button>
+  </div>
+
+  <!-- Add this in the <body> section of your HTML -->
+<div id="user-list">
+    <h3>Online Users</h3>
+    <ul id="online-users"></ul>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    const username = prompt('Enter your name:');
+    const socket = io();
+
+    // Send username to the server
+    socket.emit('join', username);
+
+    // Receive messages from the server
+    socket.on('message', (msg) => {
+      const messages = $('#messages');
+      if (msg.type === 'notification') {
+        messages.append($('<li>').text(`- ${msg.text}`));
+      } else {
+        messages.append($('<li>').text(`${msg.username}: ${msg.text}`));
+      }
+    });
+
+    // Function to send a message
+    function sendMessage() {
+      const messageInput = $('#m');
+      const message = messageInput.val();
+      if (message.trim() !== '') {
+        socket.emit('message', message);
+        messageInput.val('');
+      }
+    }
+
+    // Listen for user list updates
+  socket.on('updateUserList', (users) => {
+    const onlineUsersList = $('#online-users');
+    onlineUsersList.empty();
+    users.forEach((user) => {
+      onlineUsersList.append($('<li>').text(user));
+    });
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ededed;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  #chat {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    margin: 20px;
+    overflow: hidden;
+  }
+  
+  #messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  #messages li {
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 10px;
+    outline: none;
+  }
+  
+  button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: #25d366;
+    color: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #128c7e;
+  }
+  
+  #user-list {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+    width: 100%;
+    margin: 20px;
+    overflow: hidden;
+  }
+  
+  #online-users {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  #online-users li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #25d366;
+    color: #ffffff;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  #online-users li:hover {
+    background-color: #128c7e;
+  }
+  
+  /* Responsive layout */
+  @media (max-width: 768px) {
+    #chat,
+    #user-list {
+      max-width: 100%;
+    }
+  }
+  

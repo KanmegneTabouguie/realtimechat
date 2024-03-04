@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Chat</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="chat">
+    <ul id="messages"></ul>
+    <input id="m" autocomplete="off" oninput="handleTyping()" /><button onclick="sendMessage()">Send</button>
+    <button onclick="requestChatHistory()">Get Chat History</button>
+  </div>
+
+  <div id="user-list">
+    <h3>Online Users</h3>
+    <ul id="online-users"></ul>
+  </div>
+
+  <div id="typing-indicator"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    const username = prompt('Enter your name:');
+    const socket = io();
+
+    // Send username to the server
+    socket.emit('join', username);
+
+    // Receive messages from the server
+    socket.on('message', (msg) => {
+      const messages = $('#messages');
+      if (msg.type === 'notification') {
+        messages.append($('<li>').text(`- ${msg.text}`));
+      } else {
+        messages.append($('<li>').html(`<strong>${msg.username}:</strong> ${msg.text} <span class="timestamp">${formatTimestamp(msg.timestamp)}</span>`));
+      }
+    });
+
+    // Function to send a message
+    function sendMessage() {
+      const messageInput = $('#m');
+      const message = messageInput.val();
+      if (message.trim() !== '') {
+        socket.emit('message', { text: message });
+        messageInput.val('');
+      }
+    }
+
+    // Listen for user list updates
+    socket.on('updateUserList', (users) => {
+      const onlineUsersList = $('#online-users');
+      onlineUsersList.empty();
+      users.forEach((user) => {
+        onlineUsersList.append($('<li>').text(user));
+      });
+    });
+
+    // Handle typing event
+    function handleTyping() {
+      socket.emit('typing');
+    }
+
+    // Handle stop typing event
+    $('#m').on('focusout', () => {
+      socket.emit('stopTyping');
+    });
+
+    // Listen for user typing indicator
+    socket.on('userTyping', (data) => {
+      const typingIndicator = $('#typing-indicator');
+      if (data.isTyping) {
+        typingIndicator.text(`${data.username} is typing...`);
+      } else {
+        typingIndicator.text('');
+      }
+    });
+
+    // Function to format timestamp
+    function formatTimestamp(timestamp) {
+      const date = new Date(timestamp);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${hours}:${minutes}`;
+    }
+
+    // Function to request chat history
+    function requestChatHistory() {
+      socket.emit('requestHistory');
+    }
+
+    // Listen for chat history
+    socket.on('chatHistory', (history) => {
+      const messages = $('#messages');
+      messages.empty();
+      history.forEach((msg) => {
+        if (msg.type === 'notification') {
+          messages.append($('<li>').text(`- ${msg.text}`));
+        } else {
+          messages.append($('<li>').html(`<strong>${msg.username}:</strong> ${msg.text} <span class="timestamp">${formatTimestamp(msg.timestamp)}</span>`));
+        }
+      });
+    });
+
+    // Function to delete a message
+    function deleteMessage(messageId) {
+      socket.emit('deleteMessage', messageId);
+    }
+
+    // Function to edit a message
+    function editMessage(messageId, newText) {
+      socket.emit('editMessage', { id: messageId, text: newText });
+    }
+
+    // Listen for message deletion
+    socket.on('messageDeleted', (data) => {
+      // Implement UI changes if needed
+      console.log(`Message deleted by ${data.username}: ${data.messageId}`);
+    });
+
+    // Listen for message edit
+    socket.on('messageEdited', (editedMessage) => {
+      // Implement UI changes if needed
+      console.log(`Message edited by ${editedMessage.username}: ${editedMessage.id} - ${editedMessage.text}`);
+    });
+  </script>
+</body>
+</html>
