@@ -24,8 +24,7 @@ To install the Chat Application, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone [https://github.com/your-username/chat-application.git](https://github.com/KanmegneTabouguie/realtimechat.git)
-   ```
+   git clone https://github.com/KanmegneTabouguie/realtimechat.git   ```
 
 2. Install dependencies:
 
